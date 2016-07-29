@@ -4,6 +4,7 @@
  * DESCRIPTION: This plugin outputs the data from repeated sections in a given project to a csv file, transforming the data from
  *              wide (i.e. different fields for each occurrence) to long (i.e. one record for each occurrence)
  * VERSION:     1.0
+ *              1.1 - Added pid 3910 and longitudinal and checkbox functionality
  * AUTHOR:      Sue Lowry - University of Minnesota
  */
 
@@ -29,6 +30,16 @@ if ($pid == 1164 and $set == 'aes') { # Losartan Protocol CRFs - AEs
     $a_fields = array('event', 'desc', 'start_date', 'start_time', 'end_date', 'end_time', 'grade', 
                       'relatedness', 'act_tak_stu_int', 'action_exp', 'oth_act_tak', 'oth_action_exp', 'outcome', 'sae', 'sae_exp');
 }
+if ($pid == 3910 and $set == 'aes') { # Power to Quit II - Final - AEs
+    $pid_ok = 1;
+    $ptitle = 'Power to Quit II - Final';
+    $ftitle = 'Adverse Events';
+    $fname = 'adverse_events';
+    $a_prefixes = array('ae1_', 'ae2_', 'ae3_', 'ae4_', 'ae5_', 'ae6_', 'ae7_', 'ae8_', 'ae9_', 'ae10_', 'ae11_', 'ae12_', 'ae13_', 'ae14_', 'ae15_', 'ae16_', 'ae17_', 'ae18_', 'ae19_', 'ae20_');
+    $a_suffixes = '';
+    $a_fields = array('id', 'staff', 'date', 'study_week', 'product', 'product_type', 'begin', 'end', 'description', 'medication', 
+                      'action', 'other', 'unanticipated', 'risk', 'comments', 'physician_signature', 'signature_date', 'contacts');
+}
 
 if ($pid_ok == 0) {
     exit("Project # " . $_GET['pid'] . " has not been set up for the set " . $_GET['set'] . " for this plugin");
@@ -52,6 +63,9 @@ foreach($a_suffixes as $suffix) {
     $a_flds[$suffix] = substr($a_flds[$suffix], 2);
 }
 $flds = substr($flds, 2);
+#print "<br/><br/>a_flds: ";
+#print_r($a_flds);
+#print "<br/><br/>";
 
 // OPTIONAL: Your custom PHP code goes here. You may use any constants/variables listed in redcap_info().
 
@@ -99,6 +113,7 @@ while ($rrec = $records_result->fetch_assoc( ))
 
 $a_out_flds[] = $first_field_name;
 $a_out_flds[] = 'set';
+if ($longitudinal) { $a_out_flds[] = 'event'; }
 foreach ($a_fields as $fld) {
     $a_out_flds[] .= $fld;
 }
@@ -126,6 +141,7 @@ while ($rrec = $records_result->fetch_assoc( ))
 #print_r($recs);
 #print "<br/><br/>";
 
+
 // Set file name and path
 $filename = APP_PATH_TEMP . "w2l_" . date("YmdHis") . '_' . PROJECT_ID . "_" . $set . '.csv';
 #print "filename: $filename<br/><br/>";
@@ -139,43 +155,91 @@ if ($fp)
     fputcsv($fp, $a_out_flds);
 
     foreach($recs as $this_rec) {
-        if ($this_rec == '') { continue; }
+        $sql = sprintf( "
+            select distinct d.event_id, em.day_offset, em.descrip
+              from redcap_data d, redcap_events_metadata em 
+             where d.project_id = %d 
+               and d.field_name in (%s)
+               and d.record = '%s'
+               and em.event_id = d.event_id
+              order by em.day_offset, em.descrip",
+                     $pid, $flds, $this_rec);
+        #print "<br/>sql: $sql<br/><br/><br/>";
 
-        foreach($a_flds as $flds_key => $flds_val) {
-            $sql = sprintf( "
-                SELECT '%s' as record, m.field_order, m.field_name, d.value
-                  FROM redcap_metadata m
-                  LEFT JOIN redcap_data d
-                    ON d.project_id = m.project_id
-                   AND d.field_name = m.field_name
-                   AND d.record = '%s'
-                 WHERE m.project_id = %d
-                   AND m.field_name in (%s)
-                 ORDER BY m.field_order",
-                         $this_rec, $this_rec, $pid, $flds_val);
-            #print "<br/>sql: $sql<br/><br/><br/>";
+        // execute the sql statement
+        $events_result = $conn->query( $sql );
+        if ( ! $events_result )  // sql failed
+        {
+              die( "Could not execute SQL: <pre>$sql</pre> <br />" .  mysqli_error($conn) );
+        }
+        while ($erec = $events_result->fetch_assoc( ))
+        {
+            $evnts[] = $erec['event_id'];
+            $evnt_names[$erec['event_id']] = $erec['descrip'];
+        }
+        #print "<br/><br/>evnts: ";
+        #print_r($evnts);
+        #print "<br/><br/>evnt_names: ";
+        #print_r($evnt_names);
+        #print "<br/><br/>";
 
-            // execute the sql statement
-            $records_result = $conn->query( $sql );
-            if ( ! $records_result )  // sql failed
-            {
-                  die( "Could not execute SQL: <pre>$sql</pre> <br />" .  mysqli_error($conn) );
+        foreach($evnts as $this_evnt) {
+            if ($this_rec == '') { continue; }
+
+            foreach($a_flds as $flds_key => $flds_val) {
+                $sql = sprintf( "
+                    SELECT distinct '%s' as record, m.field_order, m.field_name, d.value, %d as event_id, '%s' as event_name
+                      FROM redcap_metadata m
+                      LEFT JOIN redcap_data d
+                        ON d.project_id = m.project_id
+                       AND d.field_name = m.field_name
+                       AND d.record = '%s'
+                       AND d.event_id = %d
+                     WHERE m.project_id = %d
+                       AND m.field_name in (%s)
+                     ORDER BY m.field_order",
+                             $this_rec, $this_evnt, $evnt_names[$this_evnt], $this_rec, $this_evnt, $pid, $flds_val);
+                #print "<br/>sql: $sql<br/><br/><br/>";
+
+                // execute the sql statement
+                $records_result = $conn->query( $sql );
+                if ( ! $records_result )  // sql failed
+                {
+                      die( "Could not execute SQL: <pre>$sql</pre> <br />" .  mysqli_error($conn) );
+                }
+                $a_vals[] = $this_rec;
+                $a_vals[] = $flds_key;
+                $output = '';
+                $first_fld = 1;
+                $any_found = 'N';
+                $prev_fld = '****';
+                while ($rrec = $records_result->fetch_assoc( ))
+                {
+                    #print "<br/><br/>rrec: ";
+                    #print_r($rrec);
+                    #print "<br/>";
+                    if ($longitudinal and $first_fld) { $a_vals[] = $rrec['event_name']; }
+                    if ($rrec['field_name'] == $prev_fld) {
+                        $a_vals[count($a_vals)-1] .= ";".$rrec['value'];
+                        $output .= ";".$rrec['value'];
+                    } else {
+                        $a_vals[] = $rrec['value'];
+                        $output .= "<br/>".$rrec['field_name'].": ".$rrec['value'];
+                    }
+                    if ($rrec['value'] > '') { $any_found = 'Y'; }
+                    $first_fld = 0;
+                    $prev_fld = $rrec['field_name'];
+                }
+                if ($any_found == 'Y') {
+                    #print "<br/><br/>output: $output<br/>";
+                    #print "<br/><br/>a_vals: ";
+                    #print_r($a_vals);
+                    #print "<br/><br/>";
+                    // Write to file
+                    fputcsv($fp, $a_vals);
+                }
+                unset($a_vals);
             }
-            $a_vals[] = $this_rec;
-            $a_vals[] = $flds_key;
-            $output = '';
-            $any_found = 'N';
-            while ($rrec = $records_result->fetch_assoc( ))
-            {
-                $a_vals[] = $rrec['value'];
-                $output .= $rrec['field_name'].": ".$rrec['value']."<br/>";
-                if ($rrec['value'] > '') { $any_found = 'Y'; }
-            }
-            if ($any_found == 'Y') {
-                // Write to file
-                fputcsv($fp, $a_vals);
-            }
-            unset($a_vals);
         }
     }
     // Close file for writing
@@ -184,6 +248,7 @@ if ($fp)
     // Close file for writing
     fclose($fp);
     db_free_result($result);
+#exit;
 
     // Open file for downloading
     $download_filename = camelCase(html_entity_decode($app_title, ENT_QUOTES)) . "_".$set."_" . date("Y-m-d_Hi") . ".csv";
