@@ -241,6 +241,8 @@ if ($fp)
                 unset($a_vals);
             }
         }
+        unset($evnts);
+        unset($evnt_names);
     }
     // Close file for writing
     fclose($fp);
