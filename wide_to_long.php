@@ -5,6 +5,7 @@
  *              wide (i.e. different fields for each occurrence) to long (i.e. one record for each occurrence)
  * VERSION:     1.0
  *              1.1 - Added pid 3910 and longitudinal and checkbox functionality
+ *              1.2 - Added pid 4298
  * AUTHOR:      Sue Lowry - University of Minnesota
  */
 
@@ -40,6 +41,25 @@ if ($pid == 3910 and $set == 'aes') { # Power to Quit II - Final - AEs
     $a_fields = array('id', 'staff', 'date', 'study_week', 'product', 'product_type', 'begin', 'end', 'description', 'medication', 
                       'action', 'other', 'unanticipated', 'risk', 'comments', 'physician_signature', 'signature_date', 'contacts');
 }
+if ($pid == 4298 and $set == 'aes') { # COMET, Project 4C Visit Data
+    $pid_ok = 1;
+    $ptitle = 'COMET, Project 4C Visit Data';
+    $ftitle = 'Adverse Events';
+    $fname = 'adverse_events';
+    $a_prefixes = array('ae_1', 'ae_2', 'ae_3', 'ae_4', 'ae_5', 'ae_6', 'ae_7', 'ae_8', 'ae_9', 'ae_10', 'ae_11', 'ae_12', 'ae_13', 'ae_14', 'ae_15', 'ae_16', 'ae_17', 'ae_18');
+    $a_suffixes = '';
+    $a_fields = array('exists', 'event', 'code', 'start_date', 'end_date', 'trt', 'ongoing', 'intensity', 'outcome', 'relationship', 
+                      'relation', 'week', 'init');
+}
+if ($pid == 4298 and $set == 'pds') { # COMET, Project 4C Visit Data
+    $pid_ok = 1;
+    $ptitle = 'COMET, Project 4C Visit Data';
+    $ftitle = 'Protocol Deviation Log';
+    $fname = 'protocol_deviation_log';
+    $a_prefixes = '';
+    $a_suffixes = array('_1', '_2', '_3', '_4', '_5', '_6', '_7', '_8', '_9', '_10');
+    $a_fields = array('pd_exists', 'pd_date', 'pd_visit', 'pd_code', 'pd_description');
+}
 
 if ($pid_ok == 0) {
     exit("Project # " . $_GET['pid'] . " has not been set up for the set " . $_GET['set'] . " for this plugin");
@@ -57,8 +77,8 @@ foreach($a_prefixes as $prefix) {
 foreach($a_suffixes as $suffix) {
     $a_flds[$suffix] = '';
     foreach ($a_fields as $fld) {
-        $flds .= ", '$suffix$fld'";
-        $a_flds[$suffix] .= ", '$suffix$fld'";
+        $flds .= ", '$fld$suffix'";
+        $a_flds[$suffix] .= ", '$fld$suffix'";
     }
     $a_flds[$suffix] = substr($a_flds[$suffix], 2);
 }
@@ -208,7 +228,7 @@ if ($fp)
                       die( "Could not execute SQL: <pre>$sql</pre> <br />" .  mysqli_error($conn) );
                 }
                 $a_vals[] = $this_rec;
-                $a_vals[] = $flds_key;
+                $a_vals[] = trim($flds_key,"_");
                 $output = '';
                 $first_fld = 1;
                 $any_found = 'N';
