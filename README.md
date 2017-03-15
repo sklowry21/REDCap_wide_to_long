@@ -10,9 +10,9 @@ if ($pid == 1164 and $set == 'aes') { # Put name of project here
     $fname = 'adverse_events';
     $a_prefixes = array('ae_1', 'ae_2', 'ae_3', 'ae_4', 'ae_5');
     $a_suffixes = '';
-    $a_fields = array('event', 'desc', 'start_date', 'start_time', 'end_date', 'end_time', 'grade',
-                      'relatedness', 'act_tak_stu_int', 'action_exp', 'oth_act_tak', 'oth_action_exp', 'outcome', 'sae', 'sae_exp');
+    $a_fields = array('event', 'desc', 'start_date', 'end_date', 'grade',
+                      'relatedness', 'outcome', 'sae', 'sae_exp');
 }
 </pre>
-In this example, there are 15 fields for each adverse event, and there are fields for up to 5 adverse events.  
+In this example, there are 9 fields for each adverse event, and there are fields for up to 5 adverse events.  
 The field names are ae_1event, ae_1desc, ae1_start_date, ... ae_1sae_exp, ae_2event, ae2_desc, ....
