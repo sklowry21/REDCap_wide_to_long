@@ -25,17 +25,43 @@ if ($pid == 1164 and $set == 'aes') { # Losartan Protocol CRFs - AEs
     $pid_ok = 1;
     $ptitle = 'Losartan Protocol CRFs';
     $ftitle = 'Adverse Events';
-    $fname = 'adverse_events';
+    #$fname = 'adverse_events';
     $a_prefixes = array('ae_1', 'ae_2', 'ae_3', 'ae_4', 'ae_5');
     $a_suffixes = '';
     $a_fields = array('event', 'desc', 'start_date', 'start_time', 'end_date', 'end_time', 'grade', 
                       'relatedness', 'act_tak_stu_int', 'action_exp', 'oth_act_tak', 'oth_action_exp', 'outcome', 'sae', 'sae_exp');
 }
+if ($pid == 2011 and $set == 'saes') { # CENIC Project 2 - Visit Data - SAEs
+    $pid_ok = 1;
+    $ptitle = 'CENIC Project 2 - Visit Data';
+    $ftitle = 'Serious Adverse Events';
+    #$fname = 'serious_adverse_event';
+    $a_prefixes = array('sae_1', 'sae_2', 'sae_3', 'sae_4');
+    $a_suffixes = '';
+    $a_fields = array('exists', 'de_init', 'ae_num', 'date_reported', 'visit', 'date_resolution', 'texta', 'rnd', 'rnd_code', 
+                      'start_prod', 'end_prod', 'textb', 'date', 'code', 'end_date', 'duration', 'dur_unit', 'desc', 'age', 
+                      'gender', 'wt', 'relevant', 'int_init', 'category', 'death_date', 'expect', 'relationship', 'risk', 
+                      'criteria', 'rev_date', 'action', 'report_date', 'report_ann', 'report_cc', 'lmp_date', 'pi_date');
+}
+if ($pid == 2011 and $set == 'tlfb') { # CENIC Project 2 - Visit Data - Timeline Followback
+    $pid_ok = 1;
+    $ptitle = 'CENIC Project 2 - Visit Data';
+    $ftitle = 'Timeline Followback';
+    #$fname = 'multiple forms';
+    $a_prefixes = '';
+    $a_suffixes = array('1', '2', '3', '4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25',
+                        '26','27','28','29','30','31','32','33','34','35','36','37','38','39','40','41','42','43','44','45','46','47','48','49','50',
+                        '51','52','53','54','55','56');
+    $a_fields = array('tf_day', 'tf_s_cig', 'tf_u_cig', 'tf_nu_cig', 'tf_alcohol', 'tf_over_alcohol', 'tf_pot', 'tf_blunt_pot', 'tf_cigar', 
+                      'tf_cigarillo', 'tf_littlecigar', 'tf_chew', 'tf_snus', 'tf_hookah', 'tf_bidis', 'tf_e_cig', 'tf_other', 'tf_21patch', 'tf_14patch', 
+                      'tf_7patch', 'tf_patch', 'tf_2gum', 'tf_4gum', 'tf_gum', 'tf_2loz', 'tf_4loz', 'tf_loz', 'tf_spray', 
+                      'tf_inhaler', 'tf_other_nic');
+}
 if ($pid == 3910 and $set == 'aes') { # Power to Quit II - Final - AEs
     $pid_ok = 1;
     $ptitle = 'Power to Quit II - Final';
     $ftitle = 'Adverse Events';
-    $fname = 'adverse_events';
+    #$fname = 'adverse_events';
     $a_prefixes = array('ae1_', 'ae2_', 'ae3_', 'ae4_', 'ae5_', 'ae6_', 'ae7_', 'ae8_', 'ae9_', 'ae10_', 'ae11_', 'ae12_', 'ae13_', 'ae14_', 'ae15_', 'ae16_', 'ae17_', 'ae18_', 'ae19_', 'ae20_');
     $a_suffixes = '';
     $a_fields = array('id', 'staff', 'date', 'study_week', 'product', 'product_type', 'begin', 'end', 'description', 'medication', 
@@ -45,7 +71,7 @@ if ($pid == 4298 and $set == 'aes') { # COMET, Project 4C Visit Data
     $pid_ok = 1;
     $ptitle = 'COMET, Project 4C Visit Data';
     $ftitle = 'Adverse Events';
-    $fname = 'adverse_events';
+    #$fname = 'adverse_events';
     $a_prefixes = array('ae_1', 'ae_2', 'ae_3', 'ae_4', 'ae_5', 'ae_6', 'ae_7', 'ae_8', 'ae_9', 'ae_10', 'ae_11', 'ae_12', 'ae_13', 'ae_14', 'ae_15', 'ae_16', 'ae_17', 'ae_18');
     $a_suffixes = '';
     $a_fields = array('exists', 'event', 'code', 'start_date', 'end_date', 'trt', 'ongoing', 'intensity', 'outcome', 'relationship', 
@@ -55,7 +81,7 @@ if ($pid == 4298 and $set == 'pds') { # COMET, Project 4C Visit Data
     $pid_ok = 1;
     $ptitle = 'COMET, Project 4C Visit Data';
     $ftitle = 'Protocol Deviation Log';
-    $fname = 'protocol_deviation_log';
+    #$fname = 'protocol_deviation_log';
     $a_prefixes = '';
     $a_suffixes = array('_1', '_2', '_3', '_4', '_5', '_6', '_7', '_8', '_9', '_10');
     $a_fields = array('pd_exists', 'pd_date', 'pd_visit', 'pd_code', 'pd_description');
