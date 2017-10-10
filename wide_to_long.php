@@ -6,6 +6,13 @@
  * VERSION:     1.0
  *              1.1 - Added pid 3910 and longitudinal and checkbox functionality
  *              1.2 - Added pid 4298
+ *              1.3 - I missed documenting a few changes
+ *              1.4 - Added 10 more AEs for Losartan project
+ *              1.4 - Added LTFB for project 2232
+ *              1.5 - Added IVR for project 2232
+ *              1.6 - Added LTFB for project 2231
+ *              1.7 - Added AEs for project 2347 (Gupta - Cannabinoid-Based Therapy and Approaches to Quantify Pain in Sickle Cell Disease)
+ *              1.8 - Added AEs for projects 2231 and 2232 and IVR for project 2231
  * AUTHOR:      Sue Lowry - University of Minnesota
  */
 
@@ -26,7 +33,7 @@ if ($pid == 1164 and $set == 'aes') { # Losartan Protocol CRFs - AEs
     $ptitle = 'Losartan Protocol CRFs';
     $ftitle = 'Adverse Events';
     #$fname = 'adverse_events';
-    $a_prefixes = array('ae_1', 'ae_2', 'ae_3', 'ae_4', 'ae_5');
+    $a_prefixes = array('ae_1', 'ae_2', 'ae_3', 'ae_4', 'ae_5', 'ae_6', 'ae_7', 'ae_8', 'ae_9', 'ae_10', 'ae_11', 'ae_12', 'ae_13', 'ae_14', 'ae_15');
     $a_suffixes = '';
     $a_fields = array('event', 'desc', 'start_date', 'start_time', 'end_date', 'end_time', 'grade', 
                       'relatedness', 'act_tak_stu_int', 'action_exp', 'oth_act_tak', 'oth_action_exp', 'outcome', 'sae', 'sae_exp');
@@ -57,6 +64,62 @@ if ($pid == 2011 and $set == 'tlfb') { # CENIC Project 2 - Visit Data - Timeline
                       'tf_7patch', 'tf_patch', 'tf_2gum', 'tf_4gum', 'tf_gum', 'tf_2loz', 'tf_4loz', 'tf_loz', 'tf_spray', 
                       'tf_inhaler', 'tf_other_nic');
 }
+if ($pid == 2231 and $set == 'aes') { # CENIC Project 3 Visit Data - AEs
+    $pid_ok = 1;
+    $ptitle = 'CENIC Project 3 - Visit Data';
+    $ftitle = 'Medical Event';
+    $a_prefixes = array('me1_', 'me2_', 'me3_', 'me4_', 'me5_', 'me6_', 'me7_', 'me8_', 'me9_', 'me10_');
+    $a_suffixes = '';
+    $a_fields = array('num', 'date_res', 'date_id', 'visit', 'age', 'gender', 'onset', 'end', 'dur', 'dur_c', 'desc', 'aecode', 
+                      'int_sign', 'int_sign_date', 'relevant', 'conmeds', 'seriousae', 'random', 'randomization_code', 'product_start', 
+                      'product_end', 'event_sev', 'event_unexpect', 'event_related', 'risk_sub', 'key_notes', 'date_review', 'action', 
+                      'int_comment', 'lmp_sign');
+}
+if ($pid == 2231 and $set == 'ivr') { # CENIC Project 3 - Visit Data - IVR Missing Data
+    $pid_ok = 1;
+    $ptitle = 'CENIC Project 3 - Visit Data';
+    $ftitle = 'IVR Missing Data';
+    $a_prefixes = '';
+    $a_suffixes = array('1', '2', '3', '4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20');
+    $a_fields = array('ivr_call_day', 'ivr_study_cig', 'ivr_ns_cig');
+}
+if ($pid == 2231 and $set == 'tlfb') { # CENIC Project 3 Visit Data - Timeline Followback
+    $pid_ok = 1;
+    $ptitle = 'CENIC Project 3 - Visit Data';
+    $ftitle = 'Timeline Followback';
+    $a_prefixes = '';
+    $a_suffixes = array('1', '2', '3', '4','5','6','7','8','9','10','11','12','13','14');
+    $a_fields = array('tf_day', 'tf_s_cig', 'tf_u_cig', 'tf_nu_cig', 'tf_cigar', 'tf_cigarillo', 'tf_littlecigar', 'tf_chew', 'tf_snus', 'tf_hookah', 'tf_bidis', 
+                      'tf_e_cig', 'tf_other', 'tf_21patch', 'tf_14patch', 'tf_7patch', 'tf_patch', 'tf_2gum', 'tf_4gum', 'tf_gum', 'tf_2loz', 'tf_4loz', 'tf_loz', 
+                      'tf_other_nic', 'tf_no_alcohol', 'tf_over_alcohol', 'tf_pot', 'tf_blunt_pot');
+}
+if ($pid == 2232 and $set == 'aes') { # CENIC Project 1 Study 2 - Visit Data - AEs
+    $pid_ok = 1;
+    $ptitle = 'CENIC Project 1 Study 2 - Visit Data';
+    $ftitle = 'RA - Medical Event';
+    $a_prefixes = array('me1_ra_', 'me2_ra_', 'me3_ra_', 'me4_ra_', 'me5_ra_', 'me6_ra_', 'me7_ra_');
+    $a_suffixes = '';
+    $a_fields = array('num', 'date_id', 'visit', 'age', 'gender', 'onset', 'end', 'dur', 'dur_c', 'desc', 'aecode', 'aetxt', 'int_sign', 
+                      'int_sign_date', 'relevant', 'conmeds', 'seriousae', 'random', 'randomization_code', 'patch', 'product_start', 'product_end');
+}
+if ($pid == 2232 and $set == 'ivr') { # CENIC Project 1 Study 2 - Visit Data - IVR Missing Data
+    $pid_ok = 1;
+    $ptitle = 'CENIC Project 1 Study 2 - Visit Data';
+    $ftitle = 'IVR Missing Data';
+    $a_prefixes = '';
+    $a_suffixes = array('1', '2', '3', '4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20');
+    $a_fields = array('ivr_call_day', 'ivr_study_cig', 'ivr_ns_cig');
+}
+if ($pid == 2232 and $set == 'tlfb') { # CENIC Project 1 Study 2 - Visit Data - Timeline Followback
+    $pid_ok = 1;
+    $ptitle = 'CENIC Project 1 Study 2 - Visit Data';
+    $ftitle = 'Timeline Followback';
+    $a_prefixes = '';
+    $a_suffixes = array('1', '2', '3', '4','5','6','7','8','9','10','11','12','13','14');
+    $a_fields = array('tf_day', 'tf_s_cig', 'tf_u_cig', 'tf_nu_cig', 'tf_nrp', 'tf_cigar', 
+                      'tf_cigarillo', 'tf_littlecigar', 'tf_chew', 'tf_snus', 'tf_hookah', 'tf_bidis', 'tf_e_cig', 'tf_other', 'tf_21patch', 'tf_14patch', 
+                      'tf_7patch', 'tf_patch', 'tf_2gum', 'tf_4gum', 'tf_gum', 'tf_2loz', 'tf_4loz', 'tf_loz', 'tf_other_nic', 'tf_no_alcohol', 'tf_over_alcohol');
+}
 if ($pid == 3910 and $set == 'aes') { # Power to Quit II - Final - AEs
     $pid_ok = 1;
     $ptitle = 'Power to Quit II - Final';
@@ -86,6 +149,24 @@ if ($pid == 4298 and $set == 'pds') { # COMET, Project 4C Visit Data
     $a_suffixes = array('_1', '_2', '_3', '_4', '_5', '_6', '_7', '_8', '_9', '_10');
     $a_fields = array('pd_exists', 'pd_date', 'pd_visit', 'pd_code', 'pd_description');
 }
+if ($pid == 2347 and $set == 'aes') { # Gupta - Cannabinoid-Based Therapy and Approaches to Quantify Pain in Sickle Cell Disease - AEs
+    $pid_ok = 1;
+    $ptitle = 'Gupta - Cannabinoid-Based Therapy and Approaches to Quantify Pain in Sickle Cell Disease';
+    $ftitle = 'Adverse Events';
+    $a_prefixes = array('ae1_', 'ae2_', 'ae3_', 'ae4_', 'ae5_', 'ae6_', 'ae7_', 'ae8_', 'ae9_', 'ae10_', 'ae11_', 'ae12_', 'ae13_', 'ae14_', 'ae15_', 'ae16_', 'ae17_', 'ae18_', 'ae19_', 'ae20_',
+                        'ae21_', 'ae22_', 'ae23_', 'ae24_', 'ae25_', 'ae26_', 'ae27_', 'ae28_', 'ae29_', 'ae30_');
+    $a_suffixes = '';
+    $a_fields = array('adverse_event', 'start_date', 'stop_date', 'toxicity', 'sae', 'related', 'unrelated_cause', 'action_taken', 'other_action_spec');
+}
+if ($pid == 2347 and $set == 'ses') { # Gupta - Cannabinoid-Based Therapy and Approaches to Quantify Pain in Sickle Cell Disease - Side Effects
+    $pid_ok = 1;
+    $ptitle = 'Gupta - Cannabinoid-Based Therapy and Approaches to Quantify Pain in Sickle Cell Disease';
+    $ftitle = 'Side Effects';
+    $a_prefixes = array('se1_', 'se2_', 'se3_', 'se4_', 'se5_', 'se6_');
+    $a_suffixes = '';
+    $a_fields = array('time', 'anxiety', 'disorientation', 'paranoia', 'confusion', 'sedation', 'dizziness', 'nausea', 'constipation', 'emesis', 'headache', 'swol_extr', 'urine_ret',
+                      'twitching', 'excitement', 'other', 'other_spec', 'loc', 'vs_t', 'vs_rr', 'vs_hr', 'vs_bps', 'vs_bpd', 'med_int_req', 'med_int_desc', 'sae', 'saemd_not', 'rn', 'another');
+}
 
 if ($pid_ok == 0) {
     exit("Project # " . $_GET['pid'] . " has not been set up for the set " . $_GET['set'] . " for this plugin");
@@ -103,8 +184,13 @@ foreach($a_prefixes as $prefix) {
 foreach($a_suffixes as $suffix) {
     $a_flds[$suffix] = '';
     foreach ($a_fields as $fld) {
-        $flds .= ", '$fld$suffix'";
-        $a_flds[$suffix] .= ", '$fld$suffix'";
+        if ($pid == 2232 and $suffix == 1 and $fld == 'ivr_day') {
+            $flds .= ", 'ivr_yn'";
+            $a_flds[$suffix] .= ", 'ivr_yn'";
+        } else {
+            $flds .= ", '$fld$suffix'";
+            $a_flds[$suffix] .= ", '$fld$suffix'";
+        }
     }
     $a_flds[$suffix] = substr($a_flds[$suffix], 2);
 }
